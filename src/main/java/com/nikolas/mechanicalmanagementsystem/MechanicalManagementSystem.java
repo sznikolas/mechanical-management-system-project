@@ -36,7 +36,7 @@ public class MechanicalManagementSystem implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (Arrays.asList(applicationContext.getEnvironment().getActiveProfiles()).contains("prod")) {
+        if (Arrays.asList(applicationContext.getEnvironment().getActiveProfiles()).isEmpty()) {
             if (!userRepository.existsByEmail("admin@gmail.com")) {
                 LocalDateTime registrationDate = LocalDateTime.now();
 
