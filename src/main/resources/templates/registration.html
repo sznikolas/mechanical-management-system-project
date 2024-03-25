@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>User Registration</title>
+    <th:block th:replace="~{fragments :: html_head}"></th:block>
+    <style>
+        .control-label {
+            font-weight: bold;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <div th:if="${param.success}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Registration successful, please check your email to complete your registration!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.invalidEmailFormat}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Invalid Email format!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.emailSendingError}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    An error occurred during registration!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.exist}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    User with this email already exists!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h2 class="text-center">Registration Form</h2>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/registration/register}" method="post" th:object="${user}"
+                          class="form-horizontal">
+
+                        <div class="form-group mb-3">
+                            <label for="firstName" class="control-label col-sm-4">First Name</label>
+                            <div class="col-sm-12">
+                                <input type="text" id="firstName" autofocus="autofocus"
+                                       placeholder="Enter your first name"
+                                       class="form-control" required name="firstName" th:field="*{firstName}">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="lastName" class="control-label col-sm-4">Last Name</label>
+                            <div class="col-sm-12">
+                                <input type="text" id="lastName" placeholder="Enter your last name"
+                                       class="form-control" required name="lastName" th:field="*{lastName}">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="email" class="control-label col-sm-4">Email</label>
+                            <div class="col-sm-12">
+                                <input type="text" id="email" placeholder="Enter your email address"
+                                       class="form-control" required name="email" th:field="*{email}">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="password" class="control-label col-sm-4">Password</label>
+                            <div class="col-sm-12">
+                                <input type="password" id="password" placeholder="Enter your password"
+                                       class="form-control" required name="password" th:field="*{password}">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-dark">Register</button>
+                            <span>Registered already? <a href="/" th:href="@{/login}">
+                                Login here
+                            </a></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:insert="~{fragments :: scripts}"></div>
+<div th:replace="~{fragments :: showConfirmationPopup}"></div>
+</body>
+</html>

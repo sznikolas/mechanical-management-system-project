@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Login page</title>
+    <th:block th:replace="~{fragments :: html_head}"></th:block>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .control-label {
+            font-weight: bold;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+
+            <div th:if="${param.verified}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    This account has already been verified, please log in here.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.expired}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Verification token is expired! <a th:href="@{/registration/verificationToken}">Send new verification
+                    token.</a>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+
+            <div th:if="${param.invalid_session}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Session expired, please re-login!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+
+            <div th:if="${param.valid}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Email verified Successfully, please log in here.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.invalid}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Verification token is invalid!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+
+            <div th:if="${param.userNotFound}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    User not found with this email.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.email_not_verified}" >
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Email not verified. Please confirm your email address or <a href="#" th:href="@{/registration/verificationToken}"> request a new confirmation email.</a>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.account_locked}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Your account has been locked. Please contact support.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.bad_credentials}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Invalid email or password.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.maximum_session}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    You are already logged in from another device or location!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+
+<!--            <div th:if="${param.unknown}">-->
+<!--                <div class="alert alert-danger alert-dismissible fade show" role="alert">-->
+<!--                    An unknown error occurred.-->
+<!--                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+            <div th:if="${param.error}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    An unknown error occurred.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+
+
+            <div th:if="${param.logout}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    You have been logged out.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.reset_pw_success}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    You have successfully reset your
+                    password, please log in here.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h2 class="text-center">Login Form</h2>
+                </div>
+
+                <div class="card-body">
+                    <form
+                            method="post"
+                            role="form"
+                            th:action="@{/login}"
+                            class="form-horizontal"
+                    >
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="email">Email</label>
+                            <input
+                                    type="email"
+                                    id="email"
+                                    required name="username"
+                                    class="form-control"
+                                    placeholder="Enter email address"
+                                    autofocus="autofocus"
+                            />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="control-label" for="password">Password</label>
+                            <input
+                                    type="password"
+                                    id="password"
+                                    required name="password"
+                                    class="form-control"
+                                    placeholder="Enter password"
+                            />
+                        </div>
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-dark">Login</button>
+                            <span> Not registered?
+                                <a th:href="@{/registration/registration-form}">Register here</a>
+                            </span>
+                            <span> Forgot password?
+                                <a th:href="@{/forgotPassword/send-forgot-password-email-form}">Forgot password.</a>
+                            </span>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:insert="~{fragments :: scripts}"></div>
+
+<div th:replace="~{fragments :: showConfirmationPopup}"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Home page</title>
+    <th:block th:replace="~{fragments :: html_head}"></th:block>
+</head>
+
+
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container text-center">
+    <br>
+    <h1>Welcome!</h1>
+
+</div>
+<div th:insert="~{fragments :: scripts}"></div>
+<div th:replace="~{fragments :: showConfirmationPopup}"></div>
+</body>
+</html>

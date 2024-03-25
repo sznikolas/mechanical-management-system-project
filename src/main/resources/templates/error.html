@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Error page</title>
+    <th:block th:replace="~{fragments :: html_head}"></th:block>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+
+<div class="row">
+
+    <div class="col-md-6 offset-md-3">
+        <br>
+        <h1 style="color: #790e0e">Sorry, this page is not available!</h1>
+
+        <p th:text="${errorMessage}"></p>
+
+        <div th:if="${param.invalid}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Invalid verification token!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.invalid_pw_token}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Invalid email verification token for password change!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.not_found}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Registration with this email address does not exist!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.imageUploadError}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                An error occurred while uploading the image!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.createCompanyError}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Unexpected error occurred while creating company!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.companyNotFound}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Company does not exist!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.machineNotFound}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Machine does not exist!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.invoiceNotFound}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Invoice does not exist!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.companyUpdateError}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                An error occurred while updating the company!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.errorDuringUpdateMachine}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Error during update Machine fields!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.expired}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                This email verification link has already expired.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <p style="color: #790e0e">You may have clicked on the wrong link or the page has been removed. <a href="#"
+            th:href="@{/}">Return to home page</a></p>
+
+    </div>
+</div>
+<div th:insert="~{fragments :: scripts}"></div>
+</body>
+</html>

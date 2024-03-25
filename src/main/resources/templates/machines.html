@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Machines</title>
+    <th:block th:insert="~{fragments :: html_head}"></th:block>
+</head>
+
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container">
+    <h2 class="mt-3">Machines</h2>
+
+    <hr/>
+
+    <div class="container">
+        <div class="row row-cols-auto">
+
+            <!--                Modal Button-->
+            <button type="button" class="custom-btn mt-1 mb-1" data-toggle="modal" data-target="#addModal"
+                    id="openModalButton">Add new
+            </button>
+
+
+            <form th:action="@{/machines}" method="post" class="row row-cols-auto" id="myForm">
+                <!--Select year-->
+                <div class="col d-flex mb-1 form-select-sm">
+                    <label for="year" class="fw-bold me-2 mt-3">Year:</label>
+                    <select id="year" name="year" onchange="this.form.submit()"
+                            class="form-select form-select-sm fw-bold mt-1">
+                        <option th:each="i : ${years}" th:value="${i.getValue()}"
+                                th:text="${i.toString()}"
+                                th:selected="${i.getValue() == selectedYear}"></option>
+                    </select>
+                </div>
+                <!--Select month-->
+                <div class="col d-flex mb-1 form-select-sm">
+                    <label for="month" class="fw-bold me-2 mt-3">Month:</label>
+                    <select id="month" name="month" onchange="this.form.submit()"
+                            class="form-select form-select-sm fw-bold mt-1">
+                        <option th:each="m : ${months}" th:value="${m.ordinal()+1 }"
+                                th:text="${m.toString()}"
+                                th:selected="${m.ordinal() +1 == selectedMonth}">
+                        </option>
+                    </select>
+                    <button type="submit" title="submit" style="display: none;"></button>
+                </div>
+
+                <!--Select company-->
+                <div class="col d-flex mb-1 ">
+                    <div class="dropdown form-select-sm">
+                        <button class="form-select fw-bold mt-1" type="button" id="multiSelectDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">Company
+                        </button>
+
+                        <ul class="dropdown-menu" aria-labelledby="multiSelectDropdown">
+                            <!-- Checkboxes with Bootstrap form-check styles -->
+                            <li>
+                                <div class="form-check mx-3 my-1">
+                                    <input class="form-check-input" type="checkbox" value="" id="selectAll">
+                                    <label class="form-check-label" for="selectAll">Select All</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+
+                            <!-- A checkbox for each company -->
+                            <li>
+                                <div th:each="c : ${companies}" class="form-check mx-3 my-1">
+                                    <input class="form-check-input" type="checkbox" id="companyCheckbox_${c.id}"
+                                           name="companyIds" th:value="${c.id}"
+                                           th:checked="${selectedCompanies != null and selectedCompanies.contains(c.id)}">
+<!--                                           th:checked="${selectedCompanyIds != null and selectedCompanyIds.contains(c.id)}">-->
+
+                                    <label class="form-check-label" for="companyCheckbox_${c.id}"
+                                           style="white-space: nowrap;">
+                                        <span th:text="${c.companyName + ' ' + c.country}" class="company-name"></span>
+                                    </label>
+                                </div>
+                            </li>
+
+                            <li>
+                                <button type="submit" title="submit" style="display: none;"></button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <hr class="mt-1">
+
+    <div class="table-responsive">
+        <!--        <table class="table table-dark  table-bordered table-hover" id="machinesTable">-->
+        <table class="table table-light table-striped table-bordered table-hover" id="machinesTable">
+            <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Price of Parts</th>
+                <th>Charged amount</th>
+                <th>Profit</th>
+                <th>Registration date</th>
+                <th>Last modified date</th>
+                <th>Country</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="machine: ${machines}">
+                <td th:text="${machine.machineBrand}"></td>
+                <td th:text="${machine.machineModel}"></td>
+                <td th:text="${machine.machinePartsSum}"></td>
+                <td th:text="${machine.chargedAmount}"></td>
+                <td th:text="${machine.profit}"></td>
+                <td th:text="${#temporals.format(machine.registrationDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${#temporals.format(machine.finishedDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${machine.getCompany().country}"></td>
+                <td>
+                    <!--                       class="btn" style="background:#209b63; border: 2px solid #9c2e2e; margin: 0; padding: 3px"-->
+                    <a th:href="@{/machines/view/{id}(id=${machine.id})}"
+                       class="btn" style="background:#0D4F2F; margin: 0; padding: 3px"
+                       title="View Machine Details">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
+                             class="bi bi-plus-circle-dotted" viewBox="0 0 16 16">
+                            <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                        </svg>
+                    </a>
+
+                    <a th:href="@{/deleteMachine/{id}(id=${machine.id})}"
+                       class="btn" style="background:#0D4F2F; margin: 0; padding: 3px"
+                       title="Delete Machine"
+                       th:onclick="showConfirmationPopup()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
+                             class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                        </svg>
+                    </a>
+
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+
+    <!--COMPANIES TOTAL PROFIT CALCULATIONS-->
+    <div th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}">
+        <!--CALCULATIONS-->
+        <div class="row">
+            <div class="col-3"><p><strong>Total Price of Parts:</strong> <span th:text="${totalPartsAmount}"></span></p>
+            </div>
+            <div class="col-3"><p><strong>Total Charged Amount:</strong> <span th:text="${totalChargedAmount}"></span>
+            </p>
+            </div>
+            <div class="col-2"><p><strong>Total Profit:</strong> <span class="text-danger fw-bold"
+                                                                       th:text="${totalProfit}"></span></p></div>
+        </div>
+
+        <!--CALCULATIONS-->
+        <div class="d-flex">
+            <label for="inputAmount" class="mt-2 fw-bold">Input Amount:</label>
+            <div class="col-1 ms-2">
+                <input type="text" class="form-control form-control-sm mt-1" id="inputAmount"
+                       name="inputAmount" onchange="calculateTotalProfit()">
+            </div>
+
+            <label for="totalProfit" class="mt-2 ms-2 fw-bold">Total Profit:</label>
+            <span id="totalProfit" class="mt-2 ms-2 fw-bold text-danger"></span>
+        </div>
+    </div>
+</div>
+
+<!--add new MODAL-->
+<div class="modal fade" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form th:action="@{/machines/addNew}" method="post">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addNewModalLabel">New machine</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="brand" class="col-form-label">Brand:</label>
+                        <input type="text" class="form-control" id="brand" name="machineBrand" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model" class="col-form-label">Model:</label>
+                        <input type="text" class="form-control" id="model" name="machineModel">
+                    </div>
+
+                    <!-- Companies in add new machine -->
+                    <div class="form-group">
+                        <label for="company" class="col-form-label">Company:</label>
+                        <select class="form-select" id="company" name="companyId" required>
+                            <option value="" disabled selected>Select a company</option>
+                            <option th:each="c : ${companies}" th:value="${c.id}"
+                                    th:text="${c.companyName + ' ' + c.country}"></option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <input type="text" class="form-control" id="description" name="description">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chargedAmount" class="col-form-label">Charged amount:</label>
+                        <input type="text" class="form-control" id="chargedAmount" name="chargedAmount">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-dark">Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div th:insert="~{fragments :: showConfirmationPopup}"></div>
+
+<div th:insert="~{fragments :: scripts}"></div>
+
+
+<!--DATATABLE-->
+<script type="text/javascript">
+    let table = $('#machinesTable').DataTable();
+    // Sort by column 6 and then re-draw
+    table
+        .order([6, 'desc'])
+        .draw();
+</script>
+
+<!--ADD NEW MODAL-->
+<script type="text/javascript">
+    let myModal = new bootstrap.Modal(document.getElementById("addNewModal"));
+    document.getElementById("openModalButton").addEventListener("click", function () {
+        myModal.show();
+    });
+</script>
+
+<!--CALCULATIONS-->
+<script type="text/javascript">
+    function calculateTotalProfit() {
+        let inputAmount = parseFloat(document.getElementById("inputAmount").value);
+        let totalProfit = parseFloat([[${totalProfit}]]);
+        let calculatedProfit = inputAmount + totalProfit;
+        document.getElementById("totalProfit").innerText = calculatedProfit.toFixed(2);
+    }
+</script>
+
+<!--MULTISELECT COMPANIES-->
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', function () {-->
+<!--        let multiSelectDropdown = document.getElementById('multiSelectDropdown');-->
+<!--        multiSelectDropdown.addEventListener('hidden.bs.dropdown', function () {-->
+<!--            let form = document.getElementById('myForm'); // Identifier of the form-->
+<!--            form.submit();-->
+<!--        });-->
+
+<!--        // Event handler for the "Select All" checkbox-->
+<!--        let selectAllCheckbox = document.getElementById('selectAll');-->
+<!--        selectAllCheckbox.addEventListener('change', function () {-->
+<!--            let checkboxes = document.querySelectorAll('input[name="companyIds"]');-->
+<!--            checkboxes.forEach(function (checkbox) {-->
+<!--                checkbox.checked = selectAllCheckbox.checked;-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        // Event handler for when any checkbox is changed
+        let checkboxes = document.querySelectorAll('.form-check-input');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                document.getElementById('myForm').submit(); // Űrlap elküldése, ha változik a jelölőnégyzet állapota
+            });
+        });
+
+        // Event handler for the "Select All" checkbox
+        let selectAllCheckbox = document.getElementById('selectAll');
+        selectAllCheckbox.addEventListener('change', function () {
+            let checkboxes = document.querySelectorAll('input[name="companyIds"]');
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            document.getElementById('myForm').submit(); // Űrlap elküldése, amikor a "Select All" jelölőnégyzet változik
+        });
+    });
+</script>
+</body>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+
+</html>

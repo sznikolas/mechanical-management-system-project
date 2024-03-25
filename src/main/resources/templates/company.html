@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Company</title>
+    <th:block th:insert="~{fragments :: html_head}"></th:block>
+</head>
+
+<body>
+
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container">
+
+    <h2 class="mt-3">Company</h2>
+    <hr/>
+
+    <div th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}" class="container">
+        <div class="row row-cols-auto">
+            <div class="col">
+                <a th:href="@{/company/new}" class="btn btn-dark mb-2">Register New Company</a>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${param.successfullyDeleted}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            You have successfully deleted the company!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div th:if="${param.deleteFailed}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Company cancellation failed!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-light table-striped table-bordered table-hover" id="companyTable">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Company Name</th>
+                <th scope="col">Company Registration Date</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Deputy leader</th>
+                <th scope="col">Country</th>
+                <th scope="col">Action</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="company: ${companies}">
+                <td th:text="${company.companyName}"></td>
+                <td th:text="${#temporals.format(company.registrationDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${company.getOwner().getLastName() +' '+ company.getOwner().getFirstName()}"></td>
+                <td th:unless="${company.getDeputyLeader() == null}"
+                    th:text="${company.getDeputyLeader().getLastName() +' '+ company.getDeputyLeader().getFirstName()}"></td>
+                <td th:if="${company.getDeputyLeader() == null}">No Deputy Leader</td>
+                <td th:text="${company.country}"></td>
+
+                <td>
+                    <a href="#" class="btn btn-dark" th:href="@{/company/{id}(id=${company.id})}">Details</a>
+                    <a th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}"
+                       href="#" class="btn btn-danger"
+                       th:href="@{/company/deleteCompany/{companyId}(companyId=${company.id})}"
+                       th:onclick="showConfirmationPopup()">Delete</a>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+</div>
+
+<div th:insert="~{fragments :: scripts}"></div>
+
+<!--DATATABLE-->
+<script>
+    let table = $('#companyTable').DataTable();
+    // Sort by column 0 and then re-draw
+    table
+        .order([0, 'asc'])
+        .draw();
+</script>
+
+<div th:replace="~{fragments :: showConfirmationPopup}"></div>
+
+</body>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+
+</html>

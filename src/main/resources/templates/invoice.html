@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Invoice</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Welcome to the Machine System! Register and start effortlessly generating invoices for your company's car repairs.
+    Simplify parts management, document repairs, and create detailed invoices for owners. Try it now!">
+</head>
+<body>
+
+<div class="container">
+    <h1>Invoice</h1>
+
+    <div class="invoice-header">
+        <div class="invoice-info">
+            <div class="invoice-number">Document number: 12345</div>
+            <div class="invoice-date">Date of issue: <span th:text="${invoiceData.currentDate}"></span></div>
+        </div>
+        <hr class="invoice-divider">
+    </div>
+
+    <div class="table-container">
+        <table class="table-left">
+            <!-- Content of the left-hand table -->
+            <tr>
+                <td colspan="2"><strong th:text="${invoiceData.getCompany().companyName.toUpperCase()}"></strong></td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;</td> <!-- Make a space -->
+            </tr>
+
+            <tr>
+                <th>Owner:</th>
+                <td th:text="${invoiceData.getCompany().owner.firstName + ' ' + invoiceData.getCompany().owner.lastName}"></td>
+            </tr>
+            <tr>
+                <th>Deputy leader:</th>
+                <td th:text="${invoiceData.getCompany().deputyLeader != null ? invoiceData.getCompany().deputyLeader.firstName + ' ' + invoiceData.getCompany().deputyLeader.lastName : 'No Deputy Leader'}"></td>
+
+            </tr>
+
+            <tr>
+                <th>Address:</th>
+                <td th:text="${invoiceData.getCompany().street + ', ' + invoiceData.getCompany().location}"></td>
+            </tr>
+            <tr>
+                <th>Postcode:</th>
+                <td th:text="${invoiceData.getCompany().postCode}"></td>
+            </tr>
+            <tr>
+
+                <th>Country:</th>
+                <td th:text="${invoiceData.getCompany().country}"></td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;</td> <!-- Make a space -->
+            </tr>
+
+            <tr>
+                <th>ID:</th>
+                <td th:text="${invoiceData.getCompany().identificationNumber}"></td>
+            </tr>
+            <tr>
+                <th>TIN:</th>
+                <td th:text="${invoiceData.getCompany().taxIdentificationNumber}"></td>
+            </tr>
+            <tr>
+                <th>VAT ID:</th>
+                <td th:text="${invoiceData.getCompany().valueAddedTaxIdentificationNumber}"></td>
+            </tr>
+
+        </table>
+
+        <div class="vertical-line"></div>
+
+        <table class="table-right">
+            <!-- Content of the right-hand table -->
+            <tr>
+                <th colspan="1"
+                    th:text="${invoiceData.getMachine().machineBrand.toUpperCase() + ' ' + invoiceData.getMachine().machineModel.toUpperCase()}"></th>
+            </tr>
+            <tr>
+                <td th:text="${invoiceData.getMachine().description}"></td>
+            </tr>
+
+        </table>
+    </div>
+
+    <hr class="invoice-divider">
+
+    <div class="table-container">
+        <table class="table-left">
+            <!-- Content of the left-hand table -->
+            <tr>
+                <th>PAYMENT DETAILS:</th>
+            </tr>
+
+            <tr>
+                <th>Payment method:</th>
+                <td>CASH</td>
+            </tr>
+
+            <tr>
+                <th>Due date:</th>
+                <td th:text="${invoiceData.futureDate}"></td>
+            </tr>
+
+
+        </table>
+
+        <div class="vertical-line"></div>
+
+        <table class="table-right">
+            <!-- Content of the right-hand table -->
+            <tr>
+                <th>MACHINE</th>
+                <!--                    <th>ZÁRUKA:</th>-->
+
+            </tr>
+            <tr>
+                <th>Reg. date to the system:</th>
+                <td th:text="${#temporals.format(invoiceData.getMachine().registrationDate, 'yyyy.MM.dd HH:mm')}"></td>
+
+
+            </tr>
+            <!--        <tr>-->
+            <!--            <th>Expiry date:</th>-->
+            <!--            <td>14 dní</td>-->
+            <!--        </tr>-->
+            <!--        <tr>-->
+            <!--            <th>Issued by:</th>-->
+            <!--            <td>Nagy Jancsi</td>-->
+            <!--        </tr>-->
+        </table>
+    </div>
+
+
+    <hr class="invoice-divider">
+
+    <h2>ITEMS:</h2>
+
+    <table>
+
+        <tr>
+            <th style="width: 20%;">Description</th>
+            <!--        <th style="width: 20%;">Quantity</th>-->
+            <th style="width: 20%;">Excluding VAT</th>
+            <th style="width: 15%;">VAT</th>
+            <th style="width: 15%;">VAT %</th>
+            <th style="width: 20%;">Price</th>
+        </tr>
+
+        <tr th:each="machinePart : ${invoiceData.getMachine().machineParts}">
+            <td th:text="${machinePart.partName}"></td>
+            <td th:text="${machinePart.partPrice}"></td>
+            <td th:text="${machinePart.unitTax}"></td>
+            <td th:text="${machinePart.taxInPercent}"></td>
+            <td th:text="${machinePart.partPriceWithTax}"></td>
+        </tr>
+
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th style="width: 20%;">Total amount</th>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td th:text="${invoiceData.getMachine().machinePartsSum}"></td>
+        </tr>
+
+    </table>
+
+
+    <hr class="invoice-divider">
+
+    <div class="invoice-info">
+        <div class="invoice-number"><h3>Total price: <span th:text="${invoiceData.getMachine().chargedAmount}"></span> €
+        </h3></div>
+        <div class="invoice-date"><p>Issued by: <span
+                th:text="${invoiceData.employeeFirstName + ' ' + invoiceData.employeeLastName}"></span></p>
+        </div>
+    </div>
+
+    <footer>
+
+        <div class="invoice-info">
+            <div class="invoice-number"></div>
+            <div class="invoice-date"><p><span class="disclaimer">This is not a tax document. VAT calculation is informative.
+        <br>
+        ID - Identification Number (IČO - in the context of Slovakia, it stands for "Identifikačné číslo")
+        <br>
+        TIN - Tax Identification Number (DIČ - in the context of Slovakia, it stands for "Daňové identifikačné číslo")
+        <br>
+        VAT ID - VAT Identification Number (IČ DPH - in the context of Slovakia, it stands for "Identifikačné číslo pre daň z pridanej hodnoty")</span>
+            </p></div>
+        </div>
+
+    </footer>
+</div>
+
+
+<div class="print-button-container">
+    <button class="print-button fw-bold" onclick="window.print()">PRINT</button>
+</div>
+
+</body>
+
+<style>
+    @page {
+        size: A4;
+        margin: 0;
+        padding: 20mm;
+    }
+
+    body {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        background-color: #e5e5e5;
+        color: #000000;
+    }
+
+    @media print {
+        .print-button {
+            display: none;
+        }
+    }
+
+    .print-button-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        visibility: hidden;
+    }
+
+    @media screen {
+        body {
+            position: relative;
+        }
+
+        .print-button-container {
+            visibility: visible;
+        }
+    }
+
+    .invoice-header {
+        margin-top: 0;
+        /*text-align: left;*/
+    }
+
+
+    .invoice-info {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .invoice-number {
+        text-align: left;
+    }
+
+    .invoice-date {
+        text-align: right;
+    }
+
+    .invoice-divider {
+        border: none;
+        border-top: 1px solid #000000;
+        margin-top: 10px;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 3px;
+        /*border-top: 1px solid #000;*/
+        /*border-bottom: 1px solid #000;*/
+    }
+
+    .table-container {
+        display: flex;
+        /*align-items: center;*/
+        position: relative;
+
+    }
+
+    .table-left {
+        width: 50%;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .table-right {
+        width: 50%;
+        display: inline-block;
+        vertical-align: top;
+
+    }
+
+    /*.table-align-top {*/
+    /*    width: 50%;*/
+    /*    display: inline-block;*/
+    /*    vertical-align: top;*/
+    /*}*/
+
+    .vertical-line {
+        border-left: 1px solid #000000;
+        /*height: 250px;*/
+        height: 100%;
+        position: absolute;
+        left: 50%;
+        margin-left: -25px;
+
+    }
+
+    .disclaimer {
+        font-size: 12px;
+    }
+
+</style>
+
+</html>

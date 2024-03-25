@@ -1,0 +1,90 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /system
+    session:
+      #exception loading sessions from persistent storage
+      persistent: false
+      # Session timeout in seconds
+      timeout: 600
+  tomcat:
+    #Required for SizeLimitExceededException
+    max-swallow-size: -1
+
+spring:
+  application:
+    name: mechanical-management-system
+  datasource:
+    url: jdbc:mysql://localhost:3306/mechanical-management-system?useSSL=true&serverTimezone=CET&useLegacyDatetimeCode=false
+    username: root
+    password: admin
+  servlet:
+    multipart:
+      #tomcat - change maximum image upload size
+      max-file-size: 10MB
+      max-request-size: 10MB
+      #Required for SizeLimitExceededException
+      resolve-lazily: true
+  jpa:
+    hibernate:
+      #      ddl-auto: create-drop
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: false
+        format_sql: false
+  #    open-in-view: false
+  profiles:
+    active:
+
+#logging:
+#  level:
+#    root: debug
+#    org.hibernate.SQL: DEBUG
+
+
+#E-mail settings
+spring.mail:
+  host: smtp.gmail.com
+  port: 587
+  username: yourEmail@gmail.com
+  password: yourGmailGeneratedPassword
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls.enable: true
+
+#Actuator config
+#http://localhost:8080/system/actuator
+management:
+  info:
+    env:
+      enabled: true
+    build:
+      enabled: true
+    git:
+      enabled: true
+      mode: full
+    java:
+      enabled: true
+    os:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+#Actuator config
+#http://localhost:8080/system/actuator
+info:
+  application:
+    name: ${spring.application.name}
+    description: Mechanical management system with invoice generation.
+    version: 1.0.0
+    author: Szocs Nikolas
+    docs: https://github.com/sznikolas

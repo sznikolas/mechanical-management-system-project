@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Search&Join Company</title>
+    <th:block th:insert="~{fragments :: html_head}"></th:block>
+</head>
+
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container">
+
+    <h2 class="mt-3">Companies</h2>
+    <hr/>
+
+    <div th:if="${param.error == 'duplicate'}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            You have already applied to this company!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div th:if="${param.alreadyApplied}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            You have already applied to this company!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div th:if="${param.successfullyApplied}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            You have successfully applied to this company!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div th:if="${param.successfullyWithdrawn}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Your application to the company has been successfully withdrawn!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-light table-striped table-bordered table-hover" id="companiesToJoinTable">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Company Name</th>
+                <th scope="col">Country</th>
+                <th>Location</th>
+                <th>Street</th>
+                <th>Postcode</th>
+                <th colspan="2">Action</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="company: ${companiesICanJoin}">
+                <td th:text="${company.companyName}"></td>
+                <!--                <td th:text="${#temporals.format(company.registrationDate, 'yyyy-MM-dd HH:mm')}"></td>-->
+                <td th:text="${company.country}"></td>
+                <td th:text="${company.location}"></td>
+                <td th:text="${company.street}"></td>
+                <td th:text="${company.postCode}"></td>
+                <td><a th:href="@{/searchAndJoinCompany/{id}(id=${company.id})}" class="btn btn-dark link-detailJS">Details</a>
+                </td>
+                <td>
+                    <form th:action="@{/searchAndJoinCompany/apply/{id}(id=${company.id})}" method="post">
+                        <button type="submit" class="btn btn-dark">Join</button>
+                    </form>
+                </td>
+
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <hr>
+
+    <h2 class="mb-2">Your Job Applications</h2>
+    <div class="table-responsive">
+        <table class="table table-light table-striped table-bordered table-hover" id="jobApplicationsTable">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Company Name</th>
+                <th scope="col">Country</th>
+                <th>Location</th>
+                <th>Street</th>
+                <th>Postcode</th>
+                <th scope="col">Status</th>
+                <th colspan="2">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="jobApplication: ${userJobApplications}">
+                <td th:text="${jobApplication.company.companyName}"></td>
+                <!--                <td th:text="${#temporals.format(jobApplication.company.registrationDate, 'yyyy-MM-dd HH:mm')}"></td>-->
+                <td th:text="${jobApplication.company.country}"></td>
+                <td th:text="${jobApplication.company.location}"></td>
+                <td th:text="${jobApplication.company.street}"></td>
+                <td th:text="${jobApplication.company.postCode}"></td>
+
+                <td>
+                    <span th:if="${jobApplication.accepted}" style="color: green;">Accepted</span>
+                    <span th:if="${!jobApplication.accepted}" style="color: red;">Pending</span>
+                </td>
+
+                <td><a th:href="@{/searchAndJoinCompany/{id}(id=${jobApplication.company.id})}"
+                       class="btn btn-dark link-detailJS">Details</a></td>
+
+                <td>
+                    <form th:action="@{/withdrawJobApplication/{jobApplicationId}(jobApplicationId=${jobApplication.id})}"
+                          method="post">
+                        <button type="submit" class="btn btn-danger" th:disabled="${jobApplication.accepted}">Cancel
+                            application
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!--MODAL-->
+<div class="myForm">
+    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Company details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="companyName" class="col-form-label" style="font-weight: bold">Company
+                                name:</label>
+                            <input type="text" class="form-control" id="companyName" name="company name" value=""
+                                   readonly>
+                            <!--                            <div id="companyName" class="form-control"></div>-->
+                        </div>
+                        <div class="col-md-4">
+                            <label for="companyOwnerName" class="col-form-label" style="font-weight: bold">Owner
+                                name:</label>
+                            <!--                            <div id="companyOwnerName" class="form-control"></div>-->
+                            <input type="text" class="form-control" id="companyOwnerName" name="company owner" value=""
+                                   readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="companyRegistrationDate" class="col-form-label" style="font-weight: bold">Registration
+                                date:</label>
+                            <!--                            <div id="companyRegistrationDate" class="form-control"></div>-->
+                            <input type="text" class="form-control" id="companyRegistrationDate"
+                                   name="company reg. date" value="" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="companyDescription" class="col-form-label" style="font-weight: bold">Company
+                            description:</label>
+                        <textarea class="form-control" id="companyDescription" name="company description" value=""
+                                  rows="5" readonly></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="companyCountry" class="col-form-label"
+                                   style="font-weight: bold">Country:</label>
+                            <!--                            <div id="companyCountry" class="form-control"></div>-->
+                            <input type="text" class="form-control" id="companyCountry" name="company country" value=""
+                                   readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="companyLocation" class="col-form-label"
+                                   style="font-weight: bold">Location:</label>
+                            <!--                            <div id="companyLocation" class="form-control"></div>-->
+                            <input type="text" class="form-control" id="companyLocation" name="company location"
+                                   value="" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="companyStreet" class="col-form-label" style="font-weight: bold">Street:</label>
+                            <!--                            <div id="companyStreet" class="form-control"></div>-->
+                            <input type="text" class="form-control" id="companyStreet" name="company street" value=""
+                                   readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="companyPostCode" class="col-form-label"
+                                   style="font-weight: bold">Postcode:</label>
+                            <!--                            <div id="companyPostCode" class="form-control"></div>-->
+                            <input type="text" class="form-control" id="companyPostCode" name="company postcode"
+                                   value="" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:insert="~{fragments :: scripts}"></div>
+
+<div th:replace="~{fragments :: showConfirmationPopup}"></div>
+<!--MODAL-->
+<!--
+    This script handles the behavior of a Bootstrap modal for displaying company details.
+    It fetches data from a provided URL when a specific element with the class 'link-detailJS' is clicked,
+    and then displays the fetched data in the modal.
+-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let myModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('link-detailJS')) {
+                event.preventDefault();
+                let href = event.target.getAttribute('href');
+
+                fetchAndShowModal(href);
+            }
+        });
+
+//ajax request - Function to fetch data from the provided URL and display it in a modal.
+        function fetchAndShowModal(href) {
+            fetch(href)
+                .then(response => response.json())
+                .then(company => {
+                    let receivedDate = company.registrationDate;
+                    let dateObject = new Date(receivedDate);
+                    let options = {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    };
+                    let formattedDate = dateObject.toLocaleDateString(undefined, options);
+
+                    // document.querySelector('.myForm #companyName').innerText = company.companyName;
+                    // document.querySelector('.myForm #companyOwnerName').innerText = company.owner;
+                    // document.querySelector('.myForm #companyRegistrationDate').innerText = formattedDate;
+                    // document.querySelector('.myForm #companyDescription').innerText = company.description;
+                    // document.querySelector('.myForm #companyCountry').innerText = company.country;
+                    // document.querySelector('.myForm #companyLocation').innerText = company.location;
+                    // document.querySelector('.myForm #companyStreet').innerText = company.street;
+                    // document.querySelector('.myForm #companyPostCode').innerText = company.postCode;
+
+
+                    document.querySelector('.myForm #companyName').value = company.companyName;
+                    document.querySelector('.myForm #companyOwnerName').value = company.owner;
+                    document.querySelector('.myForm #companyRegistrationDate').value = formattedDate;
+                    document.querySelector('.myForm #companyDescription').value = company.description;
+                    document.querySelector('.myForm #companyCountry').value = company.country;
+                    document.querySelector('.myForm #companyLocation').value = company.location;
+                    document.querySelector('.myForm #companyStreet').value = company.street;
+                    document.querySelector('.myForm #companyPostCode').value = company.postCode;
+
+
+                    myModal.show();
+                });
+        }
+    });
+
+</script>
+
+</body>
+<footer th:replace="~{fragments :: footer}"></footer>
+</html>

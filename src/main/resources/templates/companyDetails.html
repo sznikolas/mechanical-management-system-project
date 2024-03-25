@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Company details</title>
+    <th:block th:insert="~{fragments :: html_head}"></th:block>
+</head>
+
+<body>
+<div th:replace="~{fragments :: navbar}"></div>
+
+<div class="container">
+
+    <h2 class="mt-3"><span th:text="${companyDetails.companyName}"></span></h2>
+    <hr>
+    <div class="table-responsive" style="overflow-x: hidden;">
+
+        <form th:action="@{/company/update/{companyId} (companyId=${companyDetails.id})}" method="post"
+              id="companyDetailsForm"
+              th:object="${companyDetails}">
+
+            <input type="hidden" th:field="*{id}"/>
+            <table class="table table-light table-bordered">
+
+                <tr>
+                    <th colspan="3">Company Name</th>
+                    <th colspan="3">Owner Name</th>
+                    <th colspan="3">Deputy leader</th>
+                    <th colspan="3">Registration Date</th>
+
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <label for="companyName" aria-label="company name" hidden></label>
+                        <input type="text" class="form-control custom-bg-color" th:field="${companyDetails.companyName}"
+                               id="companyName"
+                               name="companyName"
+                               required minlength="3"
+                               disabled>
+                        <small id="companyNameError" style="color: red; display: none;"></small>
+                    </td>
+
+
+                    <td th:colspan="3"
+                        th:text="${companyDetails.getOwner().getLastName() +' '+ companyDetails.getOwner().getFirstName()}"></td>
+                    <td th:colspan="3" th:unless="${companyDetails.getDeputyLeader() == null}"
+                        th:text="${companyDetails.getDeputyLeader().getLastName() +' '+ companyDetails.getDeputyLeader().getFirstName()}"></td>
+                    <td th:colspan="3" th:if="${companyDetails.getDeputyLeader() == null}">Empty</td>
+
+                    <td th:colspan="3"
+                        th:text="${#temporals.format(companyDetails.registrationDate, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="12">
+                        <div class="form-group">
+                            <label for="companyDescription" style="font-weight: bold" class="mb-2">Description:</label>
+                            <textarea id="companyDescription" name="companyDescription" class="form-control custom-bg-color" rows="3"
+                                      th:field="*{description}"
+                                      disabled
+                            ></textarea>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th colspan="3">Country</th>
+                    <th colspan="3">Location</th>
+                    <th colspan="3">Street</th>
+                    <th colspan="3">Postcode</th>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <label for="companyCountry" aria-label="company country" hidden></label>
+                        <input type="text" class="custom-bg-color form-control" th:field="${companyDetails.country}" id="companyCountry"
+                               name="companyCountry" autocomplete="country" required
+                               disabled>
+                        <small id="companyCountryError" style="color: red; display: none;"></small>
+                    </td>
+                    <td colspan="3">
+                        <label for="companyLocation" aria-label="company location" hidden></label>
+                        <input type="text" class="form-control custom-bg-color" th:field="${companyDetails.location}"
+                               id="companyLocation"
+                               name="companyLocation" autocomplete="street-address"
+                               disabled>
+                    </td>
+                    <td colspan="3">
+                        <label for="companyStreet" aria-label="company street" hidden></label>
+                        <input type="text" class="form-control custom-bg-color" th:field="${companyDetails.street}" id="companyStreet"
+                               name="companyStreet" autocomplete="street-address"
+                               disabled>
+                    </td>
+                    <td colspan="3">
+                        <label for="companyPostCode" aria-label="company postcode" hidden></label>
+                        <input type="text" class="form-control custom-bg-color" th:field="${companyDetails.postCode}"
+                               id="companyPostCode"
+                               name="companyPostCode" autocomplete="postal-code"
+                               disabled>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="4">ID</th>
+                    <th colspan="4">TIN</th>
+                    <th colspan="4">VAT ID</th>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <label for="companyID" aria-label="company identification number" hidden></label>
+                        <input type="text" class="form-control custom-bg-color" th:field="${companyDetails.identificationNumber}"
+                               id="companyID"
+                               name="companyID"
+                               disabled>
+                    </td>
+                    <td colspan="4">
+                        <label for="companyTIN" aria-label="company tax identification number" hidden></label>
+                        <input type="text" class="form-control custom-bg-color" th:field="${companyDetails.taxIdentificationNumber}"
+                               id="companyTIN"
+                               name="companyTIN"
+                               disabled>
+                    </td>
+                    <td colspan="4">
+                        <label for="companyVATID" aria-label="company value added tax identification number" hidden></label>
+                        <input type="text" class="form-control custom-bg-color"
+                               th:field="${companyDetails.valueAddedTaxIdentificationNumber}"
+                               id="companyVATID"
+                               name="companyVATID"
+                               disabled>
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+
+        <!--        Save Deputy leader-->
+        <div class="row" th:if="${isLeaderOrDeputyLeader}">
+
+            <div class="col">
+                <div th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}">
+                    <form th:action="@{/company/updateCompanyDeputyLeader/{companyId}(companyId=${companyDetails.id})}"
+                          method="post" id="deputyLeaderForm">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="col-1.8 text-start mb-2 ms-2 me-2">
+                                <label for="deputyLeaderId" class="fw-bold">Deputy leader:</label>
+                            </div>
+                            <div class="col-3.5 mb-2 me-3">
+                                <select id="deputyLeaderId" name="deputyLeaderId"
+                                        class="form-select form-select-sm fw-bold">
+                                    <option th:value="${null}"
+                                            th:text="${companyDetails.deputyLeader != null ? companyDetails.deputyLeader.lastName + ' ' + companyDetails.deputyLeader.firstName : 'No Deputy Leader'}"></option>
+                                    <option value="" th:text="${('Remove Deputy Leader')}"></option>
+                                    <option th:each="deputyLeaderFromEmployees : ${allEmployees}"
+                                            th:value="${deputyLeaderFromEmployees.id}"
+                                            th:text="${deputyLeaderFromEmployees.lastName + ' ' + deputyLeaderFromEmployees.firstName}"></option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-dark col-4 mb-2 me-4 btn-sm fw-bold"
+                                    id="saveDeputyLeaderBtn">Save Deputy Leader
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="d-flex justify-content-end align-items-center">
+                    <button type="button" class="col-4 btn btn-dark me-3 btn-sm fw-bold" id="editButton"
+                            onclick="enableFields()">Edit company details
+                    </button>
+                    <button type="button" class="col-4 btn btn-dark me-3 btn-sm fw-bold" id="saveButton"
+                            style="display: none;" onclick="saveCompanyDetails()">Save company details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <hr>
+        <div th:switch="${employeesExceptCurrentUserAndOwner}">
+            <div th:if="${param.jobApplicationAcceptedSuccessfully}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Job Application Successfully Accepted!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.jobApplicationRejectedSuccessfully}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Job Application Successfully Rejected!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:if="${param.EmployeeFiredSuccessfully}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    The Employee was Successfully Dismissed!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <div th:case="*">
+                <h2>Employees</h2>
+                <table class="table table-light table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Employee</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Registration Date</th>
+                        <th th:if="${isLeaderOrDeputyLeader}" colspan="2">Actions</th>
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="employee : ${employeesExceptCurrentUserAndOwner}">
+                        <td th:text="${employee.getFirstName() +' '+ employee.lastName}"></td>
+                        <td th:text="${employee.email}"></td>
+                        <td th:text="${#temporals.format(employee.registrationDate, 'yyyy-MM-dd HH:mm')}"></td>
+
+
+                        <td th:if="${isLeaderOrDeputyLeader}">
+                            <form th:action="@{/company/removeEmployee}" method="post">
+                                <input type="hidden" name="companyId" th:value="${companyId}"/>
+                                <input type="hidden" name="employeeId" th:value="${employee.id}"/>
+                                <button th:onclick="showConfirmationPopup()" type="submit" class="btn btn-danger">
+                                    Dismiss
+                                </button>
+                            </form>
+
+                        </td>
+
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+            <h5 th:if="${#lists.isEmpty(employeesExceptCurrentUserAndOwner)}" class="text-center" style="color: red">No
+                employees to display other than you!</h5>
+        </div>
+    </div>
+
+    <hr>
+
+    <div th:if="${isLeaderOrDeputyLeader}" class="table-responsive">
+        <h2>Applicants</h2>
+        <table class="table table-light table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Applicant</th>
+                <th scope="col">Email</th>
+                <th scope="col">Registration Date</th>
+                <th th:if="${isLeaderOrDeputyLeader}" colspan="2">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="companyApplication : ${applications}">
+                <td th:text="${companyApplication.getEmployee().firstName +' '+ companyApplication.getEmployee().lastName}"></td>
+                <td th:text="${companyApplication.getEmployee().email}"></td>
+                <td th:text="${#temporals.format(companyApplication.getEmployee().registrationDate, 'yyyy-MM-dd HH:mm')}"></td>
+
+                <td th:if="${isLeaderOrDeputyLeader}">
+                    <form th:action="@{/company/accept/{companyId}(companyId=${companyId}, jobApplicationId=${companyApplication.getId()})}"
+                          method="post">
+                        <button th:onclick="showConfirmationPopup()" type="submit" class="btn btn-dark">
+                            Accept
+                        </button>
+                    </form>
+                </td>
+
+                <td th:if="${isLeaderOrDeputyLeader}">
+                    <form th:action="@{/company/reject/{companyId}(companyId=${companyId}, jobApplicationId=${companyApplication.getId()})}"
+                          method="post">
+                        <button th:onclick="showConfirmationPopup()" type="submit" class="btn btn-danger">Reject
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+<div th:insert="~{fragments :: scripts}"></div>
+
+<div th:replace="~{fragments :: showConfirmationPopup}"></div>
+
+<!--ENABLE/DISABLE BUTTONS-->
+<script>
+    function enableFields() {
+        let fields = document.querySelectorAll('#companyDetailsForm textarea, input');
+        fields.forEach(function (field) {
+            field.disabled = false;
+        });
+
+        document.getElementById('editButton').style.display = 'none';
+        document.getElementById('saveButton').style.display = 'block';
+    }
+
+    function saveCompanyDetails() {
+        let companyName = document.getElementById('companyName').value;
+        let companyCountry = document.getElementById('companyCountry').value;
+        let companyNameErrorElement = document.getElementById('companyNameError');
+        let companyCountryErrorElement = document.getElementById('companyCountryError');
+
+        if (companyName.length < 3 || companyCountry.length < 3) {
+            if (companyName.length < 3) {
+                companyNameErrorElement.innerText = 'Company name must be at least 3 characters long.';
+                companyNameErrorElement.style.display = 'block';
+            } else {
+                companyNameErrorElement.style.display = 'none';
+            }
+
+            if (companyCountry.length < 3) {
+                companyCountryErrorElement.innerText = 'Country name must be at least 3 characters long.';
+                companyCountryErrorElement.style.display = 'block';
+            } else {
+                companyCountryErrorElement.style.display = 'none';
+            }
+
+            return false;
+        }
+
+        companyNameErrorElement.style.display = 'none';
+        companyCountryErrorElement.style.display = 'none';
+        // Egyéb ellenőrzések itt
+        document.getElementById('companyDetailsForm').submit();
+    }
+</script>
+
+
+</body>
+<footer th:replace="~{fragments :: footer}"></footer>
+</html>
+
+
