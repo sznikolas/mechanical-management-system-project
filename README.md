@@ -58,7 +58,7 @@ operations.**
 - **Design Pattern:** MVC
 - **Testing:** Mockito, JUnit 5
 - **Coverage results:**
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/884aa660-2f0e-4091-8e5a-ca6f401116e5" alt="machines" style="width: 60%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/9ba78e31-a83d-40af-ad8f-74faf76863a9" alt="test_results" style="width: 60%; height: auto;">
 
 The service layer has been tested with unit tests (the controller layer testing, Integration and UI testing are currently not implemented).
 
@@ -98,7 +98,7 @@ The service layer has been tested with unit tests (the controller layer testing,
    - Ensure that the application functions properly. If you encounter any issues or have questions, you can find my contact information in the contacts section!
 
 ## User Guide
-- [Images about the application and User Guide](https://github.com/sznikolas/mechanical-management-system/blob/main/GUIDE.md)
+- [Images about the application and User Guide](https://github.com/sznikolas/mechanical-management-system-project/blob/main/GUIDE.md)
 
 ## Further Development Opportunities
 
