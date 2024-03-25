@@ -16,32 +16,32 @@
 ## Login
 - Open the application in your browser at the following address: `localhost:8080/system`
 - Here you can log in with the email address `admin@gmail.com` and the associated password `admin`.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/913a54ee-3db7-4903-8ddd-fa2eb339deee" alt="login" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/1f155777-5519-49a3-bfbc-3b3a144eea19" alt="login" style="width: 80%; height: auto;">
 
 ## Join Company
 - After logging in, you will be directed to the `Join Company` page, where you can see the list of companies.
   - You can apply to companies if you wish.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/1a427335-04a9-4cd5-aac6-130958d2d9f0" alt="joinCompany" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/4e2e20ff-8d00-4f8f-ba53-5c4f46dfb590" alt="joinCompany" style="width: 80%; height: auto;">
 
 ### Company details
 - You can view the **details** of the companies by clicking on the `Details` button.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/17d7ec7b-d791-4ade-b049-63d41d2039af" alt="companyDetails" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/cb94e2c1-6dab-4790-942e-ac4e1011732c" alt="companyDetails" style="width: 80%; height: auto;">
 
 ## Company(specific company)
 - On the `Company` page, if you have the appropriate **permissions**, you can modify the details of the selected company.
 - Here, you can manage both the applicants applying to the company and the employees already working there.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/a6283d47-70c1-4f71-ba3a-72ae167175f4" alt="company01" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/62a5611e-4b5f-482a-be2e-16d03232595a" alt="company01" style="width: 80%; height: auto;">
 
 ## Users
 - On the `Users` page, you can view the **details** of the selected user.
 - You can also **block** the user's account and modify their **access rights**.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/3d1c041d-612a-4020-97f4-136f30e0f8eb" alt="userDetails" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/5a742c77-ae60-4d86-83b4-6f5156b7a233" alt="userDetails" style="width: 80%; height: auto;">
 
 ## Profile
 - On the `Profile` page, you can see the details of the **currently logged-in** user.
 - You can change your **first and last name** and request a **password change**, which you can do **through your registered email address**.
 - Below the user data, you will see the list of **companies** where you have been **accepted**. Here, you can leave companies by clicking the `QUIT` button.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/838f87a3-153c-4f96-8e07-6045b88ad544" alt="profile" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/21a070f8-8a97-4db5-9e9c-212d8dd7343a" alt="profile" style="width: 80%; height: auto;">
 
 ## Machines
 - The `Machines` page is one of the **most important** sections.
@@ -53,12 +53,12 @@
 - Only users with appropriate permissions can view this. <br><br>
 - By clicking on the **plus button**, you will be directed to the details page of the selected machine.
 - Clicking on the **trash can icon** will **deactivate** the machine's status, and it will be moved to the `Deleted machines` section, where you can **permanently delete it** from the system.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/7044711e-ec52-4a5b-999c-0c09da25988b" alt="machines" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/bc63111a-3bdf-4f0b-ac27-746453c48967" alt="machines" style="width: 80%; height: auto;">
 
 ### Add new
 - By clicking on the `Add new` button, you can add **new machines** to the selected company.
 - When you add them, they are saved with the current date and time in the system.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/799e5834-845e-4067-b74b-3a3ac1f1f00b" alt="addNewMachine" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/7d9149ce-aa32-47d7-af24-6eddeae2a67e" alt="addNewMachine" style="width: 80%; height: auto;">
 
 ## Machine's Details
 - Clicking on the selected machine will take you to the `Machine's Details` page.
@@ -66,7 +66,7 @@
 - Below the machine's details, you can **add components**, which will appear on the invoice as well.
 - You can set the **tax rate** if desired (between 0 and 100), and the values will be updated proportionally with this percentage.
 - Additionally, you can add **pictures** of the selected machine if necessary.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/3b72aaf1-003f-4c5d-9936-8ade70e15fb8" alt="machineDetails" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/59afe5ce-7140-4d4a-bee2-7956427cc3c4" alt="machineDetails" style="width: 80%; height: auto;">
 
 ## Invoice
 - The generated **invoice** includes the following details:
@@ -79,13 +79,13 @@
   - **the components associated with the machine that needed repair/replacement and their prices**,
   - **and finally, the total amount to be paid and the name of the employee who issued the invoice**.
 - This can be **printed** by clicking on the `print` button (bottom right corner), which is handed over to the owner of the machine.
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/3c366a85-8752-48d7-89b5-cdf57bfece65" alt="invoice" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/ce04333e-ae78-44dc-87d8-517ff663688f" alt="invoice" style="width: 80%; height: auto;">
 
 ## Company page
 - On the `Company page`, you can see the list of companies.
 - Here, you can also **register** new companies if desired (for example, if you have multiple businesses/companies).
 - This requires appropriate permissions (**admin** rights).
-<img src="https://github.com/sznikolas/mechanical-management-system/assets/48528872/e08811ce-8d7c-4e79-bb18-adcbe925822d" alt="companies" style="width: 80%; height: auto;">
+<img src="https://github.com/sznikolas/mechanical-management-system-project/assets/48528872/2da5c09c-da2a-4617-b4b6-f204c6d60320" alt="companies" style="width: 80%; height: auto;">
 
 <br><br>
 # Here are additional important pieces of information about the application
